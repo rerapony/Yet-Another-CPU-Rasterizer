@@ -4,7 +4,7 @@ This a **3D Software Rasterizer** build from scratch in C++. I'm continuously wo
 
 ## Features
 - Customisable triangle rasterization (supports setting CullMode and WindingOrder)
-- Automatic scaling to support models of different sized without a need to change anything in the camera setup
+- Automatic scaling to support models of different sizes without a need to change anything in the camera setup
 - Ability to easily set and define user-specific Vertex (defaults tp MVP matrix) and Fragment (depth map based, flat colors and texture available) shaders
 - Perspective correct attribute interpolation 
 
