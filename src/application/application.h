@@ -19,6 +19,7 @@ public:
     void operator=(const Application&) = delete;
 
     void Render(const std::vector<rasterizer::color4ub>& color_buffer) const;
+    void PrintDebug(const std::string& text) const;
     void Update() const;
 
     ~Application();

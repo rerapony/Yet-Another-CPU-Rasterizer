@@ -28,6 +28,12 @@ void Application::Render(const std::vector<rasterizer::color4ub>& color_buffer) 
     SDL_RenderTexture(renderer_, texture_, nullptr, nullptr);
 }
 
+void Application::PrintDebug(const std::string& text) const
+{
+    SDL_SetRenderDrawColor(renderer_, 0, 255, 0, 255);
+    SDL_RenderDebugText(renderer_, 10.0f, 10.0f, text.c_str());
+}
+
 void Application::Update() const
 {
     SDL_RenderPresent(renderer_);

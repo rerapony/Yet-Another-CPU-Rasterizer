@@ -77,7 +77,7 @@ int main()
 
     RenderState settings;
     settings.vertexShader.functor = vertex_shader::VertexShaderMVP;
-    settings.fragmentShader.functor = fragment_shader::FragmentShaderDepthMap;
+    settings.fragmentShader.functor = fragment_shader::FragmentShaderTexture;
     settings.fragmentShader.uniforms.texture = texture;
 
     using clock = std::chrono::high_resolution_clock;
@@ -125,12 +125,6 @@ int main()
             default: ;
             }
 
-            auto current_frame = clock::now();
-            const float dt = std::chrono::duration_cast<std::chrono::duration<float>>(current_frame - last_frame_start).count();
-            last_frame_start = current_frame;
-
-            std::cout << dt << std::endl;
-
             if (!bIsRunning)
                 break;
 
@@ -157,6 +151,13 @@ int main()
             rasterizer.Clear(COLOR_DEFAULT);
             rasterizer.Draw(mesh);
             app.Render(framebuffer.GetColorBuffer());
+
+            auto current_frame = clock::now();
+            const float dt = std::chrono::duration_cast<std::chrono::duration<float,  std::milli>>(current_frame - last_frame_start).count();
+            float fps = dt > 0.0f ? (1000.0f / dt) : 0.0f;
+            last_frame_start = current_frame;
+
+            app.PrintDebug(std::string("fps: ") + std::to_string(fps));
             app.Update();
         }
     }

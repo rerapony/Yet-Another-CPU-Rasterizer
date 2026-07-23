@@ -157,10 +157,10 @@ void Rasterizer::DrawTriangle(Vertex v0, Vertex v1, Vertex v2) const
 
                     // perspective correct
                     float inv_w = e0 * inv_w0 + e1 * inv_w1 + e2 * inv_w2;
-                    f.uv = e0 * f0.uv + e1 * f1.uv + e2 * f2.uv;
-                    f.color = e0 * f0.color + e1 * f1.color + e2 * f2.color;
-                    f.uv /= inv_w;
-                    f.color /= inv_w;
+                    float w = 1.f/inv_w;
+
+                    f.uv = (e0 * f0.uv + e1 * f1.uv + e2 * f2.uv) * w;
+                    f.color = (e0 * f0.color + e1 * f1.color + e2 * f2.color) * w;
 
                     framebuffer_->SetPixel(x, y, settings_.fragmentShader(f));
                 }

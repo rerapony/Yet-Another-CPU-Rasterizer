@@ -94,3 +94,4 @@ dkms.conf
 *.iml
 out
 gen
+!/.clang-format

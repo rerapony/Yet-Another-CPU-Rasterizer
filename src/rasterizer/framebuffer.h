@@ -17,17 +17,11 @@ public:
 
     void SetPixel(const int x, const int y, const rasterizer::color4ub& color)
     {
-        if (x < 0 || x >= width_ || y < 0 || y >= height_)
-            return;
-
         color_buffer_[x + y * width_] = color;
     }
 
     void SetDepth(const int x, const int y, float depth)
     {
-        if (x < 0 || x >= width_ || y < 0 || y >= height_)
-            return;
-
         z_buffer_[x + y * width_] = depth;
     }
 
