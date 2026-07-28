@@ -1,6 +1,6 @@
 # Yet Another CPU Rasterizer
 
-This a **3D Software Rasterizer** build from scratch in C++. I'm continuously working on it to teach myself computer graphics! 
+This a **3D Software Rasterizer** built from scratch in C++. I'm continuously working on it to teach myself computer graphics! 
 
 ## Features
 - Customisable triangle rasterization (supports setting CullMode and WindingOrder)
@@ -8,7 +8,8 @@ This a **3D Software Rasterizer** build from scratch in C++. I'm continuously wo
 - Ability to easily set and define user-specific Vertex (defaults tp MVP matrix) and Fragment (depth map based, flat colors and texture available) shaders
 - Perspective correct attribute interpolation
 - SIMD friendly code
-- Debug printing FPS and primitives count
+- Tile-based rasterization
+- Debug printing rendering performance
 
 ## To do:
 - <s>Optimize perfomance and overall rasterizer design</s>
