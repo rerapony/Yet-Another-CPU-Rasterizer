@@ -6,23 +6,26 @@ This a **3D Software Rasterizer** build from scratch in C++. I'm continuously wo
 - Customisable triangle rasterization (supports setting CullMode and WindingOrder)
 - Automatic scaling to support models of different sizes without a need to change anything in the camera setup
 - Ability to easily set and define user-specific Vertex (defaults tp MVP matrix) and Fragment (depth map based, flat colors and texture available) shaders
-- Perspective correct attribute interpolation 
+- Perspective correct attribute interpolation
+- SIMD friendly code
+- Debug printing FPS and primitives count
 
 ## To do:
-- Optimize perfomance and overall rasterizer design
+- <s>Optimize perfomance and overall rasterizer design</s>
 - Shading and lighting! 
 - Multithreading!!
 
 ## Gallery
 
-|             Texture mapping             | Depth mapping                                              |
-|:---------------------------------------:|:-----------------------------------------------------------|
-|   ![Texture Mapping](texture_map.png)   | ![Depth Mapping](depth_map.png) 
+|             Texture mapping             |
+|:---------------------------------------:|
+|   ![Texture Mapping](texture_map.png)   | 
 
 ## Tech stack
 - C++17/20
 - GLM for math 
 - SDL3 and stb_image
+- ImGui
 
 ## Prerequisites
 
@@ -63,6 +66,7 @@ This project takes advantage of CMake's FetchContent feature, so you don't need 
 - https://tayfunkayhan.wordpress.com/2018/12/16/rasterization-in-one-weekend-part-ii/
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/overview-rasterization-algorithm.html
 - https://www.songho.ca/opengl/index.html
+- https://tayfunkayhan.wordpress.com/2019/07/26/chasing-triangles-in-a-tile-based-rasterizer/
 - lots of reddit posts and OpenGl documentation discussions
 
 ### 3D models:
