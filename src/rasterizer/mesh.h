@@ -1,4 +1,5 @@
 #pragma once
+#include <cfloat>
 #include <vector>
 
 #include "types.h"
@@ -14,49 +15,45 @@ namespace rasterizer
         std::vector<color4ub> pixels;
     };
 
-    struct Fragment
-    {
-        glm::vec4 color = glm::vec4(1.f);
-        float depth;
-        glm::vec2 uv;
-    };
-
-    struct Position
-    {
-        float x, y, z;
-    };
-
-    struct Vertex
-    {
-        Position position{};
-        Fragment fragment;
-    };
-
-    // indexed rendering
-    struct VertexIndex
-    {
-        size_t v, vt, vn;
-    };
-
-    // indexed rendering
-    struct Triangle
-    {
-        VertexIndex i0, i1, i2;
-    };
-
     // AABB (Axis-Aligned Bounding Box)
     struct BoundingBox
     {
         glm::vec3 minBound, maxBound;
+
+        void Reset()
+        {
+            minBound = glm::vec3(FLT_MAX);
+            maxBound = glm::vec3(-FLT_MAX);
+        }
     };
 
     struct Mesh
     {
-        std::vector<Position> positions;
-        std::vector<Fragment> fragments;
-        std::vector<Triangle> triangles;
+        std::vector<float> x, y, z;
+        std::vector<float> u, v;
+        std::vector<glm::vec4> colors;
+
+        std::vector<size_t> v_indices;
+        std::vector<size_t> vt_indices;
+
+        size_t primitives_num = 0;
 
         // for scaling
         BoundingBox AABB;
+
+        void Reset()
+        {
+            x.clear();
+            y.clear();
+            z.clear();
+            u.clear();
+            v.clear();
+            colors.clear();
+
+            v_indices.clear();
+            vt_indices.clear();
+
+            AABB.Reset();
+        }
     };
 }

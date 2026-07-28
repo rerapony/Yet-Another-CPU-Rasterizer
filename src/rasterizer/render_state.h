@@ -23,4 +23,7 @@ struct RenderState
 
     vertex_shader::VertexShader vertexShader;
     fragment_shader::FragmentShader fragmentShader;
+
+    float nearPlane;
+    float farPlane;
 };

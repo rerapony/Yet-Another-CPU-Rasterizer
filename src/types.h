@@ -15,25 +15,14 @@ namespace rasterizer
         return {v.x, v.y, v.z, 1.f};
     }
 
-    inline point AsPoint(float x, float y, float z)
+    inline point AsPoint(const float x, const float y, const float z)
     {
-        return {x, y, z, 1.f};
+        return AsPoint({x,y,z});
     }
 
     inline glm::vec4 AsVector(const glm::vec3& v)
     {
         return {v.x, v.y, v.z, 0.f};
-    }
-
-    inline glm::vec4 PerspectiveDivide(const glm::vec4& v)
-    {
-        glm::vec4 result = v;
-
-        result.x /= v.w;
-        result.y /= v.w;
-        result.z /= v.w;
-
-        return result;
     }
 
     // aggregate

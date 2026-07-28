@@ -8,9 +8,8 @@
 class Framebuffer
 {
 public:
-    Framebuffer(int width, int height) : width_(width), height_(height)
+    Framebuffer(const size_t width, const size_t height) : width_(width), height_(height)
     {
-
         color_buffer_.resize(width * height);
         z_buffer_.resize(width * height);
     }
@@ -34,9 +33,7 @@ public:
     }
 
     std::vector<rasterizer::color4ub>& GetColorBuffer() { return color_buffer_; }
-
-    int GetWidth() const { return width_; }
-    int GetHeight() const { return height_; }
+    size_t GetPitch() const { return width_ * sizeof(rasterizer::color4ub); }
 
 private:
     std::vector<rasterizer::color4ub> color_buffer_;

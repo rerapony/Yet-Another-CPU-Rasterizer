@@ -33,7 +33,7 @@ namespace vertex_shader
         return uniforms.mvp * p;
     }
 
-    glm::mat4 NormalizedModelMatrix(const rasterizer::Mesh& mesh, float targetSize, float rotY = 0.0f);
+    glm::mat4 NormalizedModelMatrix(const rasterizer::BoundingBox& aabb, float targetSize, float rotY = 0.0f);
     glm::mat4 WorldToCameraMatrix(const Camera& camera, const glm::vec3& targetPosition, const glm::vec3& upVector = glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 PerspectiveMatrix(const Camera& camera, float aspectRatio, float near, float far);;
 }

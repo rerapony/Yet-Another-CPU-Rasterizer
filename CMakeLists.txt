@@ -31,18 +31,38 @@ FetchContent_Declare(
         DOWNLOAD_NO_EXTRACT TRUE
 )
 
+# ImGui
+FetchContent_Declare(
+        imgui
+        GIT_REPOSITORY https://github.com/ocornut/imgui.git
+        GIT_TAG master
+)
+
 # either find or download external libraries
-FetchContent_MakeAvailable(glm SDL3 stb_image)
+FetchContent_MakeAvailable(glm SDL3 stb_image imgui)
 
 set(SDL_TEST_LIBRARY OFF CACHE BOOL "")
 set(SDL_EXAMPLES OFF CACHE BOOL "")
 set(SDL_TESTS OFF CACHE BOOL "")
 
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.cpp")
-
 add_library(stb_image INTERFACE)
+add_library(imgui)
 
 target_include_directories(stb_image INTERFACE ${stb_image_SOURCE_DIR})
+target_include_directories(imgui PUBLIC
+                           ${imgui_SOURCE_DIR}
+                           ${imgui_SOURCE_DIR}/backends)
+
+target_sources(imgui PUBLIC
+               ${imgui_SOURCE_DIR}/imgui.cpp
+               ${imgui_SOURCE_DIR}/imgui_draw.cpp
+               ${imgui_SOURCE_DIR}/imgui_tables.cpp
+               ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+               ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
+               ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
+
+
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.cpp")
 
 add_executable(CPURasterizer ${SOURCE_FILES})
 
@@ -50,8 +70,9 @@ target_compile_definitions(CPURasterizer PRIVATE "PROJECT_ROOT_DIR=R\"(${CMAKE_S
 
 target_include_directories(CPURasterizer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src stb_image)
 
+target_link_libraries(imgui PUBLIC SDL3::SDL3)
 target_link_libraries(CPURasterizer PRIVATE
                       glm::glm
                       SDL3::SDL3
-                      stb_image)
-
+                      stb_image
+                      imgui)

@@ -9,23 +9,23 @@ namespace fragment_shader
 {
     struct FragmentUniforms
     {
-        float nearPlane;
-        float farPlane;
-
-        // Linearized Depth Mapping
-        float minDepth;
-        float maxDepth;
-
         rasterizer::Texture texture;
     };
 
-    using FragmentShaderPtr = std::function<rasterizer::color4ub(const rasterizer::Fragment&, const FragmentUniforms&)>;
+    struct Fragment
+    {
+        glm::vec4 color = glm::vec4(1.f);
+        float depth;
+        float u, v;
+    };
+
+    using FragmentShaderPtr = std::function<rasterizer::color4ub(const Fragment&, const FragmentUniforms&)>;
     struct FragmentShader
     {
         FragmentUniforms uniforms;
         FragmentShaderPtr functor = nullptr;
 
-        rasterizer::color4ub operator()(const rasterizer::Fragment& f) const
+        rasterizer::color4ub operator()(const Fragment& f) const
         {
             if (functor == nullptr)
                 return rasterizer::ToColor4UB(f.color);
@@ -34,40 +34,22 @@ namespace fragment_shader
         }
     };
 
-    inline rasterizer::color4ub FragmentShaderFlat(const rasterizer::Fragment& fragment, const FragmentUniforms& uniforms)
+    inline rasterizer::color4ub FragmentShaderFlat(const Fragment& fragment, const FragmentUniforms& uniforms)
     {
         rasterizer::color4ub result = rasterizer::ToColor4UB(fragment.color);
         return result;
     }
 
-    inline rasterizer::color4ub FragmentShaderTexture(const rasterizer::Fragment& fragment, const FragmentUniforms& uniforms)
+    inline rasterizer::color4ub FragmentShaderTexture(const Fragment& fragment, const FragmentUniforms& uniforms)
     {
-        int x = fragment.uv.x * uniforms.texture.width;
-        int y = fragment.uv.y * uniforms.texture.height;
+        const int u = fragment.u * uniforms.texture.width;
+        const int v = fragment.v * uniforms.texture.height;
 
         rasterizer::color4ub result = rasterizer::ToColor4UB(fragment.color);
-        size_t sample_index = x + y * uniforms.texture.width;
-        if (sample_index < uniforms.texture.pixels.size())
-        {
-            result = uniforms.texture.pixels[sample_index];
-        }
+        size_t sample_index = u + v * uniforms.texture.width;
+        sample_index = std::min(sample_index, uniforms.texture.pixels.size() - 1);
+        result = uniforms.texture.pixels[sample_index];
 
         return result;
-    }
-
-    inline rasterizer::color4ub FragmentShaderDepthMap(const rasterizer::Fragment& fragment, const FragmentUniforms& uniforms)
-    {
-        glm::vec4 color = fragment.color;
-
-        const float trueDepth = 2*uniforms.nearPlane*uniforms.farPlane/(uniforms.nearPlane + uniforms.farPlane - fragment.depth*(uniforms.farPlane - uniforms.nearPlane));
-        float colorIntensity = (trueDepth - uniforms.minDepth)/(uniforms.maxDepth - uniforms.minDepth);
-        colorIntensity = glm::clamp(colorIntensity, 0.0f, 1.0f);
-        colorIntensity = 1 - colorIntensity;
-
-        color.x = colorIntensity;
-        color.y = colorIntensity;
-        color.z = colorIntensity;
-
-        return rasterizer::ToColor4UB(color);
     }
 }

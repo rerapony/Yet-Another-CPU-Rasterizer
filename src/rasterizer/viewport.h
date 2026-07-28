@@ -1,14 +1,18 @@
 #pragma once
 
-#include <cmath>
-
 struct Viewport
 {
-    float xmin, xmax, ymin, ymax;
+    Viewport(const int width, const int height) : width_(width), height_(height) {}
 
-    float GetAspectRatio() const {
-        float width = std::abs(xmax - xmin);
-        float height = std::abs(ymax - ymin);
-        return (height > 0.0f) ? (width / height) : 1.0f;
+    float GetAspectRatio() const
+    {
+        return height_ > 0 ? static_cast<float>(width_) / static_cast<float>(height_) : 1.0f;
     }
+
+    int GetWidth() const { return width_; }
+    int GetHeight() const { return height_; }
+
+private:
+    int width_;
+    int height_;
 };

@@ -6,13 +6,13 @@ using namespace rasterizer;
 
 namespace vertex_shader
 {
-    glm::mat4 NormalizedModelMatrix(const Mesh& mesh, float targetSize, float rotY)
+    glm::mat4 NormalizedModelMatrix(const BoundingBox& aabb, float targetSize, float rotY)
     {
-        if (mesh.AABB.minBound == mesh.AABB.maxBound)
+        if (aabb.minBound == aabb.maxBound)
             return {1.0f};
 
-        glm::vec3 meshCenter = (mesh.AABB.minBound + mesh.AABB.maxBound) * 0.5f;
-        glm::vec3 meshSpread = mesh.AABB.maxBound - mesh.AABB.minBound; // vec
+        glm::vec3 meshCenter = (aabb.minBound + aabb.maxBound) * 0.5f;
+        glm::vec3 meshSpread = aabb.maxBound - aabb.minBound; // vec
         float maxExtent = std::max({meshSpread.x, meshSpread.y, meshSpread.z});
         float scale = targetSize / maxExtent;
 
