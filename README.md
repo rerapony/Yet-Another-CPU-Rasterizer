@@ -17,9 +17,7 @@ This a **3D Software Rasterizer** build from scratch in C++. I'm continuously wo
 
 ## Gallery
 
-|             Texture mapping             |
-|:---------------------------------------:|
-|   ![Texture Mapping](texture_map.png)   | 
+![Texture Mapping](texture_map.png) 
 
 ## Tech stack
 - C++17/20

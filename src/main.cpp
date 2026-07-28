@@ -18,7 +18,7 @@ namespace
     std::filesystem::path MESH_PATH = "/obj/cait-sith-low-poly-model/1.obj";
     std::filesystem::path TEXTURE_PATH  = "/obj/cait-sith-low-poly-model/caitsith.png";
 
-    constexpr float CAMERA_DIST = 15.f;
+    constexpr float CAMERA_DIST = 17.5f;
     constexpr float MESH_SIZE = 10.f;
     constexpr float MOUSE_SENSITIVITY = 0.1f;
 
