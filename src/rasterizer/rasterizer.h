@@ -5,6 +5,7 @@
 #include "framebuffer.h"
 #include "mesh.h"
 #include "render_state.h"
+#include "thread_pool.h"
 #include "viewport.h"
 
 namespace rasterizer
@@ -71,9 +72,10 @@ private:
     std::shared_ptr<Viewport> viewport_;
 
     RenderState state_;
+    std::unique_ptr<ThreadPool> threadPool_;
 
     rasterizer::VertexBuffer vertexBuffer_;
     std::vector<rasterizer::RasterTriangle> triangles_;
     rasterizer::TileBuffer tileBuffer_;
-    std::mutex tile_mutex_;
+    std::mutex mutex_;
 };

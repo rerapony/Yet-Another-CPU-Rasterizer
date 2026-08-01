@@ -8,14 +8,13 @@ This a **3D Software Rasterizer** built from scratch in C++. I'm continuously wo
 - Automatic scaling to support models of different sizes without a need to change anything in the camera setup
 - Ability to easily set and define user-specific Vertex (defaults tp MVP matrix) and Fragment (defaults to texture mapping) shaders
 - Perspective correct attribute interpolation
-- SIMD friendly code
 - Tile-based rasterization
-- Rasterizer performance debug information
+- Multithreading using C++20 features (specifically `std::barrier`) and lock-free work distribution across a thread pool, resulting in ~190 FPS on Ryzen 7 9700X
 
 ## To do:
 - <s>Optimize perfomance and overall rasterizer design</s>
 - Shading and lighting! 
-- <s>Multithreading!!</s> - kind of, simple parallelism using `std::execution::parallel_policy`
+- <s>Multithreading!!</s>
 
 ## Gallery
 
@@ -32,7 +31,7 @@ This a **3D Software Rasterizer** built from scratch in C++. I'm continuously wo
 
 To build and run this project, you will need:
 
-1.  **A C++ Compiler:** (e.g., GCC, Clang, or MSVC)
+1.  **A C++ Compiler:** (GCC, Clang, or MSVC)
 2.  **CMake:** Version 3.16 or higher.
 
 ## How to Build

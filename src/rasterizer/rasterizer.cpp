@@ -65,6 +65,7 @@ void Rasterizer::Initialize(std::shared_ptr<Framebuffer> buffer, std::shared_ptr
 {
     framebuffer_ = std::move(buffer);
     viewport_ = std::move(viewport);
+    threadPool_ = std::make_unique<ThreadPool>();
 
     InitializeTileGrid();
 }
@@ -107,29 +108,27 @@ void Rasterizer::Draw(const Mesh& mesh)
     // Step 1: Vertex Shader & Perspective Projection - run in parallel
     const size_t vertices_num = mesh.v_indices.size();
     vertexBuffer_.Resize(vertices_num);
-    std::vector<size_t> indices(vertices_num);
-    std::iota(indices.begin(), indices.end(), 0);
-    for_each(std::execution::par, indices.begin(), indices.end(), [this, &mesh](const size_t index)
+    threadPool_->ForEach(vertices_num, [&mesh, this](int index)
     {
         ApplyPerspectiveProjection(mesh, index);
     });
 
-    // Step 2: Primitive assembly - NOT parallel
-    for (size_t primitive_index = 0; primitive_index < mesh.primitives_num; ++primitive_index)
+    // Step 2: Primitive assembly - parallel
+    threadPool_->ForEach(mesh.primitives_num, [this](int index)
     {
-        ProcessPrimitive(primitive_index);
-    }
+        ProcessPrimitive(index);
+    });
 
     // Step 3: Tile binning - parallel
-    std::for_each(std::execution::par, triangles_.begin(), triangles_.end(), [this](const RasterTriangle& triangle)
+    threadPool_->ForEach(triangles_.size(), [this](int index)
     {
-        BinTriangleToTiles(triangle);
+        BinTriangleToTiles(triangles_[index]);
     });
 
     // Step 4: Tile rasterization - parallel
-    std::for_each(std::execution::par, tileBuffer_.tiles.begin(), tileBuffer_.tiles.end(), [this](const Tile& tile)
+    threadPool_->ForEach(tileBuffer_.tiles.size(), [this](int index)
     {
-        RasterizeTile(tile);
+        RasterizeTile(tileBuffer_.tiles[index]);
     });
 }
 
@@ -182,6 +181,7 @@ void Rasterizer::ProcessPrimitive(const size_t primitive_index)
     if (!InitializeTriangle(triangle)) // triangle is not culled
         return;
 
+    std::lock_guard<std::mutex> lock(mutex_);
     triangles_.push_back(triangle);
 }
 
@@ -249,7 +249,7 @@ void Rasterizer::BinTriangleToTiles(const RasterTriangle& triangle)
         for (size_t iy = startTileY; iy <= endTileY; ++iy)
         {
             const size_t tile_index = iy * tileBuffer_.width + ix;
-            std::lock_guard<std::mutex> lock(tile_mutex_);
+            std::lock_guard<std::mutex> lock(mutex_);
             tileBuffer_.tiles[tile_index].triangles.push_back(&triangle);
         }
     }

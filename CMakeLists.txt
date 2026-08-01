@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16)
 
 project(CPURasterizer VERSION 1.0)
 set(CMAKE_CXX_STANDARD 20)
@@ -71,8 +71,4 @@ target_compile_definitions(CPURasterizer PRIVATE "PROJECT_ROOT_DIR=R\"(${CMAKE_S
 target_include_directories(CPURasterizer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src stb_image)
 
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
-target_link_libraries(CPURasterizer PRIVATE
-                      glm::glm
-                      SDL3::SDL3
-                      stb_image
-                      imgui)
+target_link_libraries(CPURasterizer PRIVATE glm::glm SDL3::SDL3 stb_image imgui)
