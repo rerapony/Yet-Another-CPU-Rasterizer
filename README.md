@@ -15,17 +15,18 @@ This a **3D Software Rasterizer** built from scratch in C++. I'm continuously wo
 ## To do:
 - <s>Optimize perfomance and overall rasterizer design</s>
 - Shading and lighting! 
-- Multithreading!!
+- <s>Multithreading!!</s> - kind of, simple parallelism using `std::execution::parallel_policy`
 
 ## Gallery
 
 ![Preview](cait_sith.png) 
 
 ## Tech stack
-- C++17/20
+- C++20
 - GLM for math 
-- SDL3 and stb_image
-- ImGui
+- SDL3 for window application rendering
+- stb_image for texture loading
+- ImGui for UI (duh)
 
 ## Prerequisites
 

@@ -13,10 +13,10 @@
 
 #include "stb_image.h"
 
-using namespace rasterizer;
-
 namespace utils
 {
+    using namespace rasterizer;
+
     inline bool LoadMesh(const std::string& path, Mesh& mesh)
     {
         mesh.Reset();

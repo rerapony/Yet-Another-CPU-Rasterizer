@@ -31,7 +31,7 @@ namespace rasterizer
     {
         int startX, startY;
         int endX, endY;
-        std::vector<size_t> tri_indices;
+        std::vector<const RasterTriangle*> triangles;
 
         void Clear();
     };
@@ -57,11 +57,15 @@ public:
     size_t GetPrimitivesNum() const;
 
 private:
-    void ApplyPerspectiveProjection(const rasterizer::Mesh& mesh);
-    void ProcessPrimitives(const rasterizer::Mesh& mesh);
+    void ApplyPerspectiveProjection(const rasterizer::Mesh& mesh, const size_t index);
+
+    void ProcessPrimitive(const size_t primitive_index);
     bool InitializeTriangle(rasterizer::RasterTriangle& triangle) const;
     bool ShouldCullTriangle(bool isCCW) const;
-    void BinTrianglesToTiles();
+
+    void BinTriangleToTiles(const rasterizer::RasterTriangle& triangle);
+
+    void RasterizeTile(const rasterizer::Tile& tile);
 
     std::shared_ptr<Framebuffer> framebuffer_;
     std::shared_ptr<Viewport> viewport_;
@@ -71,4 +75,5 @@ private:
     rasterizer::VertexBuffer vertexBuffer_;
     std::vector<rasterizer::RasterTriangle> triangles_;
     rasterizer::TileBuffer tileBuffer_;
+    std::mutex tile_mutex_;
 };

@@ -13,7 +13,7 @@ namespace
     constexpr int WINDOW_WIDTH = 800;
     constexpr int WINDOW_HEIGHT = 600;
     constexpr int SIDEBAR_WIDTH = 250;
-    const std::string WINDOW_TITLE = "CPU Rasterizer";
+    constexpr std::string WINDOW_TITLE = "CPU Rasterizer";
 
     rasterizer::color4ub COLOR_DEFAULT = rasterizer::ToColor4UB({1.f, 1.f, 1.f, 1.f});
     std::filesystem::path ASSETS_FOLDER_DEFAULT = "/assets/";

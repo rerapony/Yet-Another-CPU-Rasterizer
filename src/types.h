@@ -7,7 +7,7 @@
 
 namespace rasterizer
 {
-    typedef glm::vec4 point;
+    using point = glm::vec4;
 
     // homogeneous coordinates
     inline point AsPoint(const glm::vec3& v)
