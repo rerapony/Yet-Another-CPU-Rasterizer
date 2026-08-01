@@ -1,20 +1,40 @@
 #include "application.h"
 
+#include <filesystem>
 #include <iostream>
+#include <utility>
 
+#include "config.h"
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
 #include "imgui_internal.h"
 #include "types.h"
+#include "SDL3/SDL_dialog.h"
 #include "SDL3/SDL_init.h"
 
-Application::Application(const std::string& app_name, int width, int height, int sidebar_width, SDL_WindowFlags flags)
+namespace application
 {
-    width_ = width;
-    height_ = height;
-    sidebar_width_ = sidebar_width;
+    static constexpr SDL_DialogFileFilter obj_filters[] = {{"Wavefront OBJ", "obj"}, { "All Files", "*" }};
+    static constexpr SDL_DialogFileFilter tex_filters[] = {{ "Image Files", "png;jpg;jpeg;bmp;tga" },{ "All Files", "*" }};
+    const char* cull_modes[] = {"None", "Back", "Front"};
+    const char* winding_orders[] = {"CW", "CCW"};
 
+    void SDLCALL OnFileSelected(void* userdata, const char* const* filelist, int filter) {
+        if (filelist && filelist[0]) {
+            auto* file_path = static_cast<std::filesystem::path*>(userdata);
+            *file_path = filelist[0];
+        }
+    }
+}
+
+Application::Application(const std::string& app_name, const application::WindowSizeInfo& size_info,
+                         std::filesystem::path asset_folder, const SDL_WindowFlags flags) :
+    width_(size_info.width),
+    height_(size_info.height),
+    sidebar_width_(size_info.sidebar_width),
+    asset_folder_(std::move(asset_folder))
+{
     InitSDL(app_name, flags);
     InitImGui();
 }
@@ -79,6 +99,22 @@ void Application::ShutdownImGui()
     ImGui::DestroyContext();
 }
 
+void Application::RenderOpenFileButton(const std::string& button_name, std::filesystem::path& file_path,
+                                       const SDL_DialogFileFilter* filters, const int filters_num)
+{
+    if (ImGui::Button(button_name.c_str()))
+    {
+        SDL_ShowOpenFileDialog(application::OnFileSelected, &file_path, window_, filters, filters_num,
+                               asset_folder_.string().c_str(), false);
+    }
+
+    if (!file_path.empty())
+    {
+        ImGui::SameLine();
+        ImGui::Text("%s", file_path.filename().string().c_str());
+    }
+}
+
 void Application::Render(const std::vector<rasterizer::color4ub>& color_buffer, size_t pitch)
 {
     SDL_UpdateTexture(texture_, nullptr, color_buffer.data(), pitch);
@@ -86,8 +122,10 @@ void Application::Render(const std::vector<rasterizer::color4ub>& color_buffer, 
     SDL_RenderTexture(renderer_, texture_, nullptr, nullptr);
 }
 
-void Application::RenderUIOverlay(const application::UIInfo& ui_info)
+void Application::RenderUIOverlay(config::MeshConfig& mesh_config, config::RenderConfig& render_config, const application::PerformanceInfo& performance_info)
 {
+    using namespace config;
+
     ImGui_ImplSDLRenderer3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
@@ -96,20 +134,30 @@ void Application::RenderUIOverlay(const application::UIInfo& ui_info)
     ImGui::SetNextWindowSize(ImVec2(static_cast<float>(sidebar_width_), static_cast<float>(height_)));
 
     // sidebar flags
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize
-                           | ImGuiWindowFlags_NoMove
-                           | ImGuiWindowFlags_NoCollapse
-                           | ImGuiWindowFlags_NoBringToFrontOnFocus;
+    constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize
+        | ImGuiWindowFlags_NoMove
+        | ImGuiWindowFlags_NoCollapse
+        | ImGuiWindowFlags_NoBringToFrontOnFocus
+        | ImGuiWindowFlags_NoTitleBar;
 
-
-    
     // UI Overlay Begin
-    ImGui::Begin("Rasterizer Performance", nullptr, flags);
-    ImGui::Separator();
-    ImGui::Text("Primitives: %zu", ui_info.primitives_num);
+    ImGui::Begin("Rasterizer", nullptr, flags);
+
+    RenderOpenFileButton("Load mesh...", mesh_config.mesh_path, application::obj_filters, 2);
+    RenderOpenFileButton("Load texture...", mesh_config.texture_path, application::tex_filters, 2);
+
+    ImGui::SeparatorText("Rasterization");
+
+    ImGui::Text("Cull mode:");
+    ImGui::Combo("##cull_mode", (int*)&render_config.cullMode, "None\0Front\0Back\0");
+    ImGui::Text("Winding order:");
+    ImGui::Combo("##winding_order", (int*)&render_config.windingOrder, "CW\0CCW\0");
+
+    ImGui::SeparatorText("Performance");
+    ImGui::Text("Primitives: %zu", performance_info.primitives_num);
     ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
     ImGui::End();
-    // UI Overlay End
+    //UI Overlay End
 
     ImGui::Render();
 }

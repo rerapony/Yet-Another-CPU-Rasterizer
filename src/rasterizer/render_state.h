@@ -1,29 +1,16 @@
 #pragma once
 #include "fragment_shader.h"
 #include "vertex_shader.h"
-
-enum CullMode
-{
-    None,
-    Front,
-    Back
-};
-
-enum WindingOrder
-{
-    CW,
-    CCW
-};
+#include "config.h"
 
 // same as PSO
 struct RenderState
 {
-    CullMode cullMode = None;
-    WindingOrder windingOrder = CCW;
+    config::RenderConfig render_config;
 
     vertex_shader::VertexShader vertexShader;
     fragment_shader::FragmentShader fragmentShader;
 
-    float nearPlane;
-    float farPlane;
+    float nearPlane = 0.f;
+    float farPlane = 0.f;
 };

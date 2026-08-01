@@ -32,6 +32,8 @@ namespace rasterizer
         int startX, startY;
         int endX, endY;
         std::vector<size_t> tri_indices;
+
+        void Clear();
     };
 
     struct TileBuffer
@@ -52,7 +54,7 @@ public:
 
     void Clear(const rasterizer::color4ub& color);
     void Draw(const rasterizer::Mesh& mesh);
-    int GetPrimitivesNum() const;
+    size_t GetPrimitivesNum() const;
 
 private:
     void ApplyPerspectiveProjection(const rasterizer::Mesh& mesh);

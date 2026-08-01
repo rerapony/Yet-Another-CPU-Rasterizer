@@ -1,12 +1,13 @@
 #include "vertex_shader.h"
 
-#include "camera.h"
+#include "config.h"
+#include "glm/ext/matrix_transform.hpp"
 
 using namespace rasterizer;
 
 namespace vertex_shader
 {
-    glm::mat4 NormalizedModelMatrix(const BoundingBox& aabb, float targetSize, float rotY)
+    glm::mat4 NormalizedModelMatrix(const BoundingBox& aabb, const float targetSize, const float rotY)
     {
         if (aabb.minBound == aabb.maxBound)
             return {1.0f};
@@ -23,7 +24,7 @@ namespace vertex_shader
         return scale_mat * rotation_mat * translation_mat;
     }
 
-    glm::mat4 WorldToCameraMatrix(const Camera& camera, const glm::vec3& targetPosition, const glm::vec3& upVector)
+    glm::mat4 WorldToCameraMatrix(const config::CameraConfig& camera, const glm::vec3& targetPosition, const glm::vec3& upVector)
     {
         // camera rotation
         //
@@ -51,7 +52,7 @@ namespace vertex_shader
         return result;
     }
 
-    glm::mat4 PerspectiveMatrix(const Camera& camera, float aspectRatio, float near, float far)
+    glm::mat4 PerspectiveMatrix(const config::CameraConfig& camera, const float aspectRatio, const float near, const float far)
     {
         glm::mat4 result(0.0f);
 

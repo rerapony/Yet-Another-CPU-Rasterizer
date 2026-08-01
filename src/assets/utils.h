@@ -1,4 +1,6 @@
 #pragma once
+
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -69,7 +71,7 @@ namespace utils
                     int v_index, vt_index, n_index;
                     sscanf(vertex_string.c_str(), "%d/%d/%d", &v_index, &vt_index, &n_index);
 
-                    // since obj start indexing from 1
+                    // since assets start indexing from 1
                     v_index = v_index > 0 ? v_index - 1 : mesh.x.size() + v_index;
                     vt_index = vt_index > 0 ? vt_index - 1 : mesh.x.size() + vt_index;
 
@@ -114,12 +116,12 @@ namespace utils
         texture.pixels.clear();
 
         int channels;
-        if (auto data = stbi_load(path.c_str(), &texture.width, &texture.height, &channels, 3))
+        if (const auto data = stbi_load(path.c_str(), &texture.width, &texture.height, &channels, 3))
         {
             int totalPixels = texture.width * texture.height;
             for (int i = 0; i < totalPixels; ++i)
             {
-                color4ub pixel_data;
+                color4ub pixel_data{};
                 pixel_data.r = data[i * 3 + 0];
                 pixel_data.g = data[i * 3 + 1];
                 pixel_data.b = data[i * 3 + 2];

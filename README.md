@@ -3,13 +3,14 @@
 This a **3D Software Rasterizer** built from scratch in C++. I'm continuously working on it to teach myself computer graphics! 
 
 ## Features
-- Customisable triangle rasterization (supports setting CullMode and WindingOrder)
+- Custom .obj parser
+- Triangle rasterization, customizable through UI (supports choosing culling mode and triangles winding order)
 - Automatic scaling to support models of different sizes without a need to change anything in the camera setup
-- Ability to easily set and define user-specific Vertex (defaults tp MVP matrix) and Fragment (depth map based, flat colors and texture available) shaders
+- Ability to easily set and define user-specific Vertex (defaults tp MVP matrix) and Fragment (defaults to texture mapping) shaders
 - Perspective correct attribute interpolation
 - SIMD friendly code
 - Tile-based rasterization
-- Debug printing rendering performance
+- Rasterizer performance debug information
 
 ## To do:
 - <s>Optimize perfomance and overall rasterizer design</s>
@@ -18,7 +19,7 @@ This a **3D Software Rasterizer** built from scratch in C++. I'm continuously wo
 
 ## Gallery
 
-![Texture Mapping](texture_map.png) 
+![Preview](cait_sith.png) 
 
 ## Tech stack
 - C++17/20
@@ -60,13 +61,16 @@ This project takes advantage of CMake's FetchContent feature, so you don't need 
 5.  Run the application
 
 ## Resources
-### Code and math:
+### Rasterization:
 - https://lisyarus.github.io/blog/
 - https://tayfunkayhan.wordpress.com/2018/12/16/rasterization-in-one-weekend-part-ii/
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/overview-rasterization-algorithm.html
 - https://www.songho.ca/opengl/index.html
 - https://tayfunkayhan.wordpress.com/2019/07/26/chasing-triangles-in-a-tile-based-rasterizer/
 - lots of reddit posts and OpenGl documentation discussions
+
+### UI:
+- https://pthom.github.io/imgui_explorer/
 
 ### 3D models:
 - https://casual-effects.com/data/

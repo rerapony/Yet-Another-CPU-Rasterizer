@@ -2,9 +2,13 @@
 
 #include <functional>
 
-#include "camera.h"
 #include "mesh.h"
 #include "glm/matrix.hpp"
+
+namespace config
+{
+    struct CameraConfig;
+}
 
 namespace vertex_shader
 {
@@ -34,6 +38,6 @@ namespace vertex_shader
     }
 
     glm::mat4 NormalizedModelMatrix(const rasterizer::BoundingBox& aabb, float targetSize, float rotY = 0.0f);
-    glm::mat4 WorldToCameraMatrix(const Camera& camera, const glm::vec3& targetPosition, const glm::vec3& upVector = glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 PerspectiveMatrix(const Camera& camera, float aspectRatio, float near, float far);;
+    glm::mat4 WorldToCameraMatrix(const config::CameraConfig& camera, const glm::vec3& targetPosition, const glm::vec3& upVector = glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 PerspectiveMatrix(const config::CameraConfig& camera, float aspectRatio, float near, float far);;
 }

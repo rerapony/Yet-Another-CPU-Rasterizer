@@ -50,6 +50,11 @@ void VertexBuffer::Resize(const size_t size)
     v.resize(size);
 }
 
+void Tile::Clear()
+{
+    tri_indices.clear();
+}
+
 void Rasterizer::SetRenderState(const RenderState& state)
 {
     state_ = state;
@@ -92,7 +97,7 @@ void Rasterizer::Clear(const color4ub& color)
 
     for (auto& tile : tileBuffer_.tiles)
     {
-        tile.tri_indices.clear();
+        tile.Clear();
     }
 }
 
@@ -167,7 +172,7 @@ void Rasterizer::Draw(const Mesh& mesh)
     }
 }
 
-int Rasterizer::GetPrimitivesNum() const
+size_t Rasterizer::GetPrimitivesNum() const
 {
     return triangles_.size();
 }
@@ -267,8 +272,10 @@ bool Rasterizer::InitializeTriangle(RasterTriangle& triangle) const
 
 bool Rasterizer::ShouldCullTriangle(const bool isCCW) const
 {
-    const bool isFrontFace = state_.windingOrder == CCW && isCCW || state_.windingOrder == CW && !isCCW;
-    switch (state_.cullMode)
+    using namespace config;
+
+    const bool isFrontFace = state_.render_config.windingOrder == CCW && isCCW || state_.render_config.windingOrder == CW && !isCCW;
+    switch (state_.render_config.cullMode)
     {
     case Front:
         return isFrontFace;
